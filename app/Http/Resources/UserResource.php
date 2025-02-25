@@ -28,10 +28,10 @@ class UserResource extends JsonResource
             'activation_status' => $this->activation_status,
             'motif' => $this->motif,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
-            'last_login_at' => $this->last_login_at ? $this->last_login_at->format('Y-m-d H:i:s') : null,
-            'ip_address' => $this->ip_address,
-            'user_agent' => $this->user_agent,
+            // 'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
+            // 'last_login_at' => $this->last_login_at ? $this->last_login_at->format('Y-m-d H:i:s') : null,
+            // 'ip_address' => $this->ip_address,
+            // 'user_agent' => $this->user_agent,
         ];
     }
 }

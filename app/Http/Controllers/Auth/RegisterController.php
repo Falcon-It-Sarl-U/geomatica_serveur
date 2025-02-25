@@ -106,7 +106,7 @@ class RegisterController extends Controller
                 $new_activation_code = User::generateActivationCode();
                 $user->update([
                     'activation_code' => $new_activation_code,
-                    'activation_code_expires_at' => now()->addMinutes(30)
+                    'activation_code_expires_at' => now()->addMinutes(45)
                 ]);
 
                 Mail::to($user->email)->send(new RegisterMail($user, $new_activation_code));
@@ -148,58 +148,6 @@ class RegisterController extends Controller
 
 
 
-/*
-    public function verify(Request $request): JsonResponse
-    {
-        $request->validate([
-            'email' => 'required|email|exists:users,email',
-            'activation_code' => 'required|string|size:6'
-        ], [
-            'email.required' => "L'email est requis.",
-            'email.exists' => "Cet email n'existe pas dans notre système.",
-            'activation_code.required' => "Le code d'activation est requis.",
-            'activation_code.size' => "Le code d'activation doit être composé de 6 chiffres."
-        ]);
 
-        // Récupérer l'utilisateur avec le bon email
-        $user = User::where('email', $request->email)->first();
-
-        // Vérifier si le code d'activation est défini et non expiré
-        if (!$user->activation_code || $user->activation_code_expires_at < now()) {
-            // Générer un nouveau code d'activation si l'ancien a expiré
-            $new_activation_code = User::generateActivationCode();
-            $user->update([
-                'activation_code' => $new_activation_code,
-                'activation_code_expires_at' => now()->addMinutes(30)
-            ]);
-
-            // Renvoyer le nouveau code par email
-            Mail::to($user->email)->send(new RegisterMail($user, $new_activation_code));
-
-            return response()->json([
-                'message' => "Votre code d'activation a expiré. Un nouveau code a été envoyé à votre adresse e-mail.",
-                'status' => 400
-            ], 400);
-        }
-
-        // Comparer correctement le code d'activation
-        if (!hash_equals($user->activation_code, $request->activation_code)) {
-            return response()->json(['message' => "Le code d'activation est incorrect."], 400);
-        }
-
-        // Activer le compte
-        $user->update([
-            'is_approved' => true,
-            'email_verified_at' => now(),
-            'activation_code' => null,
-            'activation_code_expires_at' => null
-        ]);
-
-        return response()->json([
-            'message' => "Votre compte a été activé avec succès.",
-            'status' => 200
-        ], 200);
-    }
-*/
 
 }

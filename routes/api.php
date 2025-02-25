@@ -48,6 +48,9 @@ Route::middleware(['api.exception'])->group(function () {
             // 🔹 Gestion des utilisateurs
             Route::apiResource('users', UserController::class);
             Route::apiResource('roles', RoleController::class);
+            Route::get('/roles/{role}/permissions', [RoleController::class, 'getPermissions']);
+            Route::get('/roles-with-permissions', [RoleController::class, 'getRolesWithPermissions']);
+
 
             // 🔹 Activation et Rejet des utilisateurs (Accès réservé à l'ADMIN)
             // 🔹 Activation et Rejet des utilisateurs (Accès réservé à l'ADMIN)

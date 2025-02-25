@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -16,6 +17,30 @@ class RoleController extends Controller
             return response()->json(['error' => 'Unable to fetch roles'], 500);
         }
     }
+
+    public function getPermissions(Role $role)
+    {
+        try {
+            // Charge la relation "permissions" pour le rôle
+            $role->load('permissions');
+            return response()->json($role->permissions, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Impossible de récupérer les permissions pour ce rôle'], 500);
+        }
+    }
+
+    public function getRolesWithPermissions()
+    {
+        try {
+            // Charger la relation "permissions" pour tous les rôles
+            $roles = Role::with('permissions')->get();
+            return response()->json($roles, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Impossible de récupérer les rôles avec leurs permissions'], 500);
+        }
+    }
+
+
 
     public function store(Request $request)
     {
