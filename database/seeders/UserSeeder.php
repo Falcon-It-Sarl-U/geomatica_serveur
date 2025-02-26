@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
                 // 'disable_at' => null, // Pas de désactivation par défaut
                 'email_verified_at' => now(),
                 'is_approved' => true, // Admin approuvé directement
-                'password' => Hash::make(env('APP_USER_PASSWORD', 'password123')),
+                'password' => Hash::make(env('APP_USER_PASSWORD', 'Admin2020')),
                 'remember_token' => Str::random(10),
             ]
         );

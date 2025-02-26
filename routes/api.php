@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\RoleController;
+use App\Http\Controllers\PermissionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -48,6 +49,9 @@ Route::middleware(['api.exception'])->group(function () {
             // 🔹 Gestion des utilisateurs
             Route::apiResource('users', UserController::class);
             Route::apiResource('roles', RoleController::class);
+            Route::delete('destroy_R/{role}', [RoleController::class, 'destroy_R']);
+            Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
+
             Route::get('/roles/{role}/permissions', [RoleController::class, 'getPermissions']);
             Route::get('/roles-with-permissions', [RoleController::class, 'getRolesWithPermissions']);
 

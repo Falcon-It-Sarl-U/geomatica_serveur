@@ -37,12 +37,12 @@ class SyncPermissions extends Command
 
         Permission::upsert($permissionData, uniqueBy: ['name']);
 
-        $superAdminRole = Role::firstOrCreate(
-            ['name' => env('APP_SUPERADMIN_ROLE')],
-            ['description' => 'Super Admin Role']
+        $adminRole = Role::firstOrCreate(
+            ['name' => env('APP_ADMIN_ROLE')],
+            ['description' => 'Admin Role']
         );
 
-        $superAdminRole->syncPermissions(array_keys($permissions));
+        $adminRole->syncPermissions(array_keys($permissions));
 
 
         $this->info('Permissions synchronized successfully!');
