@@ -54,6 +54,7 @@ Route::middleware(['api.exception'])->group(function () {
 
             Route::get('/roles/{role}/permissions', [RoleController::class, 'getPermissions']);
             Route::get('/roles-with-permissions', [RoleController::class, 'getRolesWithPermissions']);
+            Route::put('/roles/{role}/update-permissions', [RoleController::class, 'updatePermissions'])->name('roles.updatePermissions');
 
 
             // 🔹 Activation et Rejet des utilisateurs (Accès réservé à l'ADMIN)

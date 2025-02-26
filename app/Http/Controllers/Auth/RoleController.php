@@ -10,6 +10,9 @@ use Spatie\Permission\Middleware\PermissionMiddleware;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Auth;
+
 class RoleController extends Controller
 {
     public static function middleware(): array {
@@ -97,8 +100,31 @@ class RoleController extends Controller
             return response()->json(['message' => 'Rôle introuvable.'], 404);
         }
     }
+    public function updatePermissions(Request $request, Role $role)
+    {
+        // Vérifier si l'utilisateur est autorisé à modifier les permissions
+        if (!Auth::user()->hasRole('ADMIN')) {
+            return response()->json(['message' => "Non autorisé."], 403);
+        }
 
-    
+        // Validation de la requête
+        $request->validate([
+            'permissions' => 'array',
+            'permissions.*' => 'exists:permissions,id'
+        ]);
+
+        // Récupérer les permissions à affecter
+        $permissions = Permission::whereIn('id', $request->permissions)->get();
+
+        // Mise à jour des permissions du rôle
+        $role->syncPermissions($permissions);
+
+        return response()->json([
+            'message' => "Les permissions du rôle {$role->name} ont été mises à jour avec succès.",
+            'status' => 200
+        ]);
+    }
+
 
 
 }
