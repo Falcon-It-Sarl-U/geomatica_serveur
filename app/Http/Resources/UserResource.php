@@ -23,6 +23,8 @@ class UserResource extends JsonResource
             'company_name' => $this->company_name,
             'avatar' => $this->avatar ? url($this->avatar) : null, // Retourner l'URL de l'avatar
             'roles' => $this->roles->pluck('name'), // Retourne les rôles attribués
+            'roles' => $this->roles->pluck('name'), // Retourne les rôles attribués
+            'permissions' => $this->getAllPermissions()->pluck('name'), // Retourne les permissions
             'email_verified_at' => $this->email_verified_at,
             'is_approved' => $this->is_approved,
             'activation_status' => $this->activation_status,

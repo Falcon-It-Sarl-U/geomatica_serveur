@@ -21,6 +21,10 @@ class RoleSeeder extends Seeder
         Role::create(['name' => 'USER']);
         echo "Role USER created\n";
 
+        Role::create(['name' => 'MODERATOR']);
+        echo "Role MODERATOR created\n";
+
+
 
     }
 }
