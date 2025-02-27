@@ -77,6 +77,74 @@ class RegisterController extends Controller
 
 
 
+    // public function verify(Request $request): JsonResponse
+    // {
+    //     $request->validate([
+    //         'email' => 'required|email|exists:users,email',
+    //         'activation_code' => 'required|string|size:6'
+    //     ], [
+    //         'email.required' => "L'email est requis.",
+    //         'email.exists' => "Cet email n'existe pas dans notre système.",
+    //         'activation_code.required' => "Le code d'activation est requis.",
+    //         'activation_code.size' => "Le code d'activation doit être composé de 6 chiffres."
+    //     ]);
+
+    //     return DB::transaction(function () use ($request) {
+    //         $user = User::where('email', $request->email)->lockForUpdate()->first();
+
+    //         if (!$user) {
+    //             return response()->json(['message' => "Utilisateur introuvable."], 404);
+    //         }
+
+    //         // 🔹 **Cas 1: L'utilisateur est déjà activé**
+    //         if ($user->is_approved) {
+    //             return response()->json(['message' => "Votre compte est déjà activé."], 200);
+    //         }
+
+    //         // 🔹 **Cas 2: Code expiré**
+    //         if (!$user->activation_code || $user->activation_code_expires_at < now()) {
+    //             $new_activation_code = User::generateActivationCode();
+    //             $user->update([
+    //                 'activation_code' => $new_activation_code,
+    //                 'activation_code_expires_at' => now()->addMinutes(45)
+    //             ]);
+
+    //             Mail::to($user->email)->send(new RegisterMail($user, $new_activation_code));
+
+    //             return response()->json([
+    //                 'message' => "Votre code d'activation a expiré. Un nouveau code a été envoyé.",
+    //                 'status' => 400
+    //             ], 400);
+    //         }
+
+    //         // 🔹 **Cas 3: Vérification du code d'activation**
+    //         if (!hash_equals($user->activation_code, $request->activation_code)) {
+    //             return response()->json(['message' => "Le code d'activation est incorrect."], 400);
+    //         }
+
+    //         // 🔹 **Activation du compte en attente de validation admin**
+    //         $user->update([
+    //             'email_verified_at' => now(),
+    //             'activation_code' => null,
+    //             'activation_code_expires_at' => null,
+    //             'activation_status' => 'pending'
+    //         ]);
+
+    //         // 🔹 **Notification à l'admin**
+    //         $admins = User::role('ADMIN')->get();
+    //         foreach ($admins as $admin) {
+    //             Mail::to($admin->email)->send(new AdminApprovalNotificationMail($user));
+    //         }
+
+    //         return response()->json([
+    //             'message' => "Votre compte a été activé avec succès et est en attente de validation par l'administrateur.",
+    //             'status' => 200
+    //         ], 200);
+    //     });
+    // }
+
+
+
     public function verify(Request $request): JsonResponse
     {
         $request->validate([
@@ -136,15 +204,17 @@ class RegisterController extends Controller
                 Mail::to($admin->email)->send(new AdminApprovalNotificationMail($user));
             }
 
+            // ✅ **Génération du token temporaire**
+            $token = $user->createToken('PendingApprovalToken')->plainTextToken;
+
             return response()->json([
                 'message' => "Votre compte a été activé avec succès et est en attente de validation par l'administrateur.",
-                'status' => 200
+                'status' => 200,
+                'token' => $token,
+                'user' => $user
             ], 200);
         });
     }
-
-
-
 
 
 

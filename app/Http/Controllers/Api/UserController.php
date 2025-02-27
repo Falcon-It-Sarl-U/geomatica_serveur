@@ -155,6 +155,59 @@ class UserController extends Controller
     }
 
 
+    // public function getCurrentUser(Request $request)
+    // {
+    //     $user = Auth::user();
+
+    //     if (!$user) {
+    //         return response()->json([
+    //             'message' => "Utilisateur non trouvé."
+    //         ], 404);
+    //     }
+
+    //     if (!$user->is_approved) {
+    //         return response()->json([
+    //             'message' => "Votre compte n'est pas encore approuvé. Veuillez patienter."
+    //         ], 403);
+    //     }
+
+    //     return response()->json([
+    //         'status' => 200,
+    //         'message' => "Informations de l'utilisateur récupérées avec succès.",
+    //         'data' => $user
+    //     ], 200);
+    // }
+
+    public function getCurrentUser(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => "Utilisateur non trouvé."
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => "Informations de l'utilisateur récupérées avec succès.",
+            'data' => [
+                'id' => $user->id,
+                'firstname' => $user->firstname,
+                'lastname' => $user->lastname,
+                'email' => $user->email,
+                'avatar' => $user->avatar,
+                'phone' => $user->phone,
+                'company_name' => $user->company_name,
+                'is_approved' => $user->is_approved,
+                'activation_status' => $user->activation_status, // Ajout du statut
+                'created_at' => $user->created_at,
+                'updated_at' => $user->updated_at,
+            ]
+        ], 200);
+    }
+
+
 
 
 
