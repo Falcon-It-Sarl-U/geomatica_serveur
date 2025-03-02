@@ -55,4 +55,32 @@ class UserRoleController extends Controller
     }
 
 
+    /**
+     * Récupérer tous les utilisateurs approuvés
+     */
+    public function getApprovedUsers(): JsonResponse
+    {
+        $users = User::where('is_approved', true)->get();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Liste des utilisateurs approuvés récupérée avec succès.',
+            'data' => $users
+        ]);
+    }
+
+    /**
+     * Récupérer tous les utilisateurs non approuvés
+     */
+    public function getPendingUsers(): JsonResponse
+    {
+        $users = User::where('is_approved', false)->get();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Liste des utilisateurs en attente de validation récupérée avec succès.',
+            'data' => $users
+        ]);
+    }
+
 }

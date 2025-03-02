@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\UserRoleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -56,12 +57,15 @@ Route::middleware(['api.exception'])->group(function () {
             Route::get('/roles-with-permissions', [RoleController::class, 'getRolesWithPermissions']);
 
             Route::get('/auth/user', [UserController::class, 'getCurrentUser']);
-            
+
             Route::put('/roles/{role}/update-permissions', [RoleController::class, 'updatePermissions'])->name('roles.updatePermissions');
 
 
 
             // 🔹 Activation et Rejet des utilisateurs (Accès réservé à l'ADMIN)
+            Route::middleware(['role:ADMIN'])->group(function () {
+                Route::post('/users/{user}/update-role', [UserRoleController::class, 'updateRole']);
+            });
             // 🔹 Activation et Rejet des utilisateurs (Accès réservé à l'ADMIN)
             Route::middleware(['role:ADMIN'])->group(function () {
                 Route::post('users/{user}/approve', [UserController::class, 'approve'])
