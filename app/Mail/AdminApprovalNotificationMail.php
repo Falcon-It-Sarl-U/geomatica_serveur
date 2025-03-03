@@ -59,7 +59,7 @@ class AdminApprovalNotificationMail extends Mailable
                     ->markdown('emails.admin.approval_notification')
                     ->with([
                         'user' => $this->user,
-                        'admin_url' => config('app.url') . '/admin/users/' . $this->user->id
+                        'admin_url' => config('app.FRONTEND_URL') . '/#/admin/users/' . $this->user->id
                     ]);
     }
 }

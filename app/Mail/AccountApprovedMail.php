@@ -60,7 +60,7 @@ class AccountApprovedMail extends Mailable
                 ->with([
                     'user' => $this->user,
                     'app_name' => config('app.name'), // 🔹 Ajout de app_name
-                    'login_url' => config('app.url') . '/login'
+                    'login_url' => config('app.FRONTEND_URL') . '/#/login'
                 ]);
 }
 

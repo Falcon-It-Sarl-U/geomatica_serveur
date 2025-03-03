@@ -70,7 +70,7 @@ class RegisterMail extends Mailable
                 'user' => $this->user,
                 'activation_code' => $this->activation_code, // Assurez-vous qu'il est bien passé
                 'app_name' => config('app.name'),
-                'app_url' => config('app.url'),
+                'app_url' => config('app.FRONTEND_URL'),
             ]);
     }
 }
