@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Admin\UserRoleController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\PermissionController;
 use Illuminate\Http\Request;
@@ -41,6 +43,11 @@ Route::middleware(['api.exception'])->group(function () {
         Route::post('login', [LoginController::class, 'login'])->name('login');
         Route::post('register', [RegisterController::class, 'register'])->name('register');
         Route::post('verify', [RegisterController::class, 'verify'])->name('verify');
+
+        Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
+        Route::post('reset-password', [ResetPasswordController::class, 'reset']);
+
+
 
         // Routes nécessitant une authentification
         Route::middleware('auth:sanctum')->group(function () {
