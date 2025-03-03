@@ -8,9 +8,7 @@ Un nouvel utilisateur vient d’activer son compte et attend une validation de v
 - **Email :** {{ $user->email }}
 - **Entreprise :** {{ $user->company_name ?? 'Non spécifiée' }}
 
-@component('mail::button', ['url' => $admin_url])
-📌 Valider ou Refuser
-@endcomponent
+
 
 Merci de traiter cette demande dès que possible.
 
