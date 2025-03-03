@@ -27,7 +27,7 @@ Ce code est valide **pendant 30 minutes**.
 
 
 ⚠️ **Si vous n'êtes pas à l'origine de cette inscription, ignorez cet e-mail.**
-Si vous avez besoin d'aide, contactez-nous à **[support{{ config('app.url') }}](mailto:support{{ config('app.url') }})**.
+Si vous avez besoin d'aide, contactez-nous à support@geomatica.space .
 
 Merci de votre confiance,
 L’équipe **{{ config('app.name') }}**
