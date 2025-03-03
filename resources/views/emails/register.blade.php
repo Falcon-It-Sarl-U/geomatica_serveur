@@ -19,12 +19,12 @@ Ce code est valide **pendant 30 minutes**.
 ### 📌 Instructions pour activer votre compte :
 
 1. **Ouvrez l’application** **{{ config('app.name') }}**
-2. **Accédez à la page de vérification**
+2. **Accédez à la page de vérification**    
 3. **Saisissez votre code d'activation**
 
 
 
-<x-mail::button :url="config('app.url') . '/verify?email=' . urlencode($user->email) . '&code=' . $activation_code">
+<x-mail::button :url="config('app.url') . '/auth/two-step/verify?email=' . urlencode($user->email) . '&code=' . $activation_code">
 📩 Activer mon compte
 </x-mail::button>
 

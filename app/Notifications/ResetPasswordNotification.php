@@ -47,7 +47,7 @@ class ResetPasswordNotification extends Notification
         return (new MailMessage)
             ->subject('Réinitialisation de votre mot de passe')
             ->line('Vous recevez cet e-mail parce que nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.')
-            ->action('Réinitialiser le mot de passe', url(env('FRONTEND_URL') . "/reset-password?token=" . $this->token))
+            ->action('Réinitialiser le mot de passe', url(env('FRONTEND_URL') . "#/auth/reset-password?token=" . $this->token))
             ->line('Si vous n’avez pas demandé de réinitialisation de mot de passe, aucune autre action n’est requise.');
     }
 
