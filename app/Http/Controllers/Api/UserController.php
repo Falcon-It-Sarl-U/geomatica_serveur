@@ -177,7 +177,24 @@ class UserController extends Controller
         ], 200);
     }
 
+    public function getUserStatistics(): JsonResponse
+    {
+        $totalUsers = User::count();
+        $approvedUsers = User::where('is_approved', true)->count();
+        $pendingUsers = User::where('activation_status', 'pending')->count();
+        $rejectedUsers = User::where('activation_status', 'rejected')->count();
 
+        return response()->json([
+            'status' => 200,
+            'message' => 'Statistiques des utilisateurs récupérées avec succès.',
+            'data' => [
+                'total_users' => $totalUsers,
+                'approved_users' => $approvedUsers,
+                'pending_users' => $pendingUsers,
+                'rejected_users' => $rejectedUsers
+            ]
+        ]);
+    }
 
 
 

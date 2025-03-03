@@ -65,6 +65,7 @@ Route::middleware(['api.exception'])->group(function () {
             Route::get('usersRole/approved', [UserRoleController::class, 'getApprovedUsers']);
             Route::get('usersRole/pending', [UserRoleController::class, 'getPendingUsers']);
             Route::get('usersRole/rejected', [UserRoleController::class, 'getRefusedUsers']);
+            Route::get('stats/users', [UserController::class, 'getUserStatistics']);
 
             // 🔹 Activation et Rejet des utilisateurs (Accès réservé à l'ADMIN)
             Route::middleware(['role:ADMIN'])->group(function () {
