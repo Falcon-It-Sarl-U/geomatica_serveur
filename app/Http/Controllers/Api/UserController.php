@@ -195,6 +195,27 @@ class UserController extends Controller
             ]
         ]);
     }
+    public function getUserRegistrationStats()
+    {
+        $monthlyRegistrations = User::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('count', 'month');
+
+        // 📌 Formatage pour que chaque mois ait une valeur (même 0 si pas d'inscription)
+        $formattedRegistrations = array_fill(1, 12, 0);
+        foreach ($monthlyRegistrations as $month => $count) {
+            $formattedRegistrations[$month - 1] = $count; // Index basé sur 0 pour Angular
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Inscriptions mensuelles récupérées avec succès',
+            'data' => [
+                'monthly_registrations' => array_values($formattedRegistrations)
+            ]
+        ]);
+    }
 
 
 
