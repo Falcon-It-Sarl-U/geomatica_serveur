@@ -61,14 +61,19 @@ class RoleController extends Controller
 
     public function store(Request $request)
     {
-        $role = Role::create(['name' => $request->name]);
+        $request->validate([
+            'name' => 'required|string|unique:roles,name',
+        ]);
+
+        $role = Role::create([
+            'name' => $request->name,
+            'guard_name' => 'web' // 🔹 Forcer le guard à "web"
+        ]);
+
         return response()->json($role, 201);
     }
 
-    // public function show(Role $role)
-    // {
-    //     return response()->json($role);
-    // }
+
 
     public function show(Role $role)
 {

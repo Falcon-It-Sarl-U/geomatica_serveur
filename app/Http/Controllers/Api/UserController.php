@@ -106,13 +106,6 @@ class UserController extends Controller
 
 
 
-
-
-
-
-    /**
-     * ❌ Refuser un utilisateur
-     */
     public function reject(Request $request, User $user): JsonResponse
     {
         // Validation des entrées
@@ -155,29 +148,6 @@ class UserController extends Controller
     }
 
 
-    // public function getCurrentUser(Request $request)
-    // {
-    //     $user = Auth::user();
-
-    //     if (!$user) {
-    //         return response()->json([
-    //             'message' => "Utilisateur non trouvé."
-    //         ], 404);
-    //     }
-
-    //     if (!$user->is_approved) {
-    //         return response()->json([
-    //             'message' => "Votre compte n'est pas encore approuvé. Veuillez patienter."
-    //         ], 403);
-    //     }
-
-    //     return response()->json([
-    //         'status' => 200,
-    //         'message' => "Informations de l'utilisateur récupérées avec succès.",
-    //         'data' => $user
-    //     ], 200);
-    // }
-
     public function getCurrentUser(Request $request)
     {
         $user = Auth::user();
@@ -207,7 +177,24 @@ class UserController extends Controller
         ], 200);
     }
 
+    public function getUserStatistics(): JsonResponse
+    {
+        $totalUsers = User::count();
+        $approvedUsers = User::where('is_approved', true)->count();
+        $pendingUsers = User::where('activation_status', 'pending')->count();
+        $rejectedUsers = User::where('activation_status', 'rejected')->count();
 
+        return response()->json([
+            'status' => 200,
+            'message' => 'Statistiques des utilisateurs récupérées avec succès.',
+            'data' => [
+                'total_users' => $totalUsers,
+                'approved_users' => $approvedUsers,
+                'pending_users' => $pendingUsers,
+                'rejected_users' => $rejectedUsers
+            ]
+        ]);
+    }
 
 
 
