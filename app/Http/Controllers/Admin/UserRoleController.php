@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -58,29 +59,76 @@ class UserRoleController extends Controller
     /**
      * Récupérer tous les utilisateurs approuvés
      */
-    public function getApprovedUsers(): JsonResponse
-    {
-        $users = User::where('is_approved', true)->get();
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Liste des utilisateurs approuvés récupérée avec succès.',
-            'data' => $users
-        ]);
-    }
+     public function getApprovedUsers()
+     {
+         $users = User::where('is_approved', true)
+             ->orderBy('id', 'desc')
+             ->paginate(15);
+
+         if ($users->isEmpty()) {
+             return response()->json([
+                 'status' => 200,
+                 'message' => 'Aucun utilisateur approuvé trouvé.',
+                 'data' => []
+             ]);
+         }
+
+         return response()->json([
+             'status' => 200,
+             'data' => UserResource::collection($users)
+         ]);
+     }
+
+
+
+    /**
+     * Récupérer tous les utilisateurs EN attente
+     */
+
+     public function getPendingUsers()
+     {
+         $users = User::where('is_approved', false)
+             ->where('activation_status', 'pending')
+             ->orderBy('id', 'desc')
+             ->paginate(15);
+
+         if ($users->isEmpty()) {
+             return response()->json([
+                 'status' => 200,
+                 'message' => 'Aucun utilisateur en attente trouvé.',
+                 'data' => []
+             ]);
+         }
+
+         return response()->json([
+             'status' => 200,
+             'data' => UserResource::collection($users)
+         ]);
+     }
+
 
     /**
      * Récupérer tous les utilisateurs non approuvés
      */
-    public function getPendingUsers(): JsonResponse
-    {
-        $users = User::where('is_approved', false)->get();
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Liste des utilisateurs en attente de validation récupérée avec succès.',
-            'data' => $users
-        ]);
-    }
+     public function getRefusedUsers()
+     {
+         $users = User::where('activation_status', "rejected")
+             ->orderBy('id', 'desc')
+             ->paginate(15);
 
+         if ($users->isEmpty()) {
+             return response()->json([
+                 'status' => 200,
+                 'message' => 'Aucun utilisateur Rejeté trouvé.',
+                 'data' => []
+             ]);
+         }
+
+         return response()->json([
+             'status' => 200,
+             'data' => UserResource::collection($users)
+         ]);
+     }
 }
