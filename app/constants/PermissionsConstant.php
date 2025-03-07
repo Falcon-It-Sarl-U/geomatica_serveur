@@ -19,6 +19,12 @@ class PermissionsConstant
     const PERM_SMSI_UPDATE = 'PERM_SMSI_UPDATE';
     const PERM_SMSI_DELETE = 'PERM_SMSI_DELETE';
 
+        /** Perm MAPCITY */
+        const PERM_MAPCITY_VIEW = 'PERM_MAPCITY_VIEW';
+        const PERM_MAPCITY_CREATE = 'PERM_MAPCITY_CREATE';
+        const PERM_MAPCITY_UPDATE = 'PERM_MAPCITY_UPDATE';
+        const PERM_MAPCITY_DELETE = 'PERM_MAPCITY_DELETE';
+
 
 
     /** Perm ROLE */

@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Auth\LoginRequest as AuthLoginRequest;
 use App\Http\Resources\UserResource;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use OpenApi\Annotations as OA;
 
@@ -133,19 +134,46 @@ class LoginController extends Controller
     /**
      * Déconnexion de l'utilisateur
      */
-    public function destroy(): JsonResponse
-    {
-        $user = Auth::user();
 
-        if ($user) {
-            $user->tokens()->delete(); // Supprime tous les tokens de l'utilisateur
-        }
+     public function destroy(Request $request): JsonResponse
+{
+    $user = Auth::user();
 
+    if (!$user) {
         return response()->json([
-            'status' => Response::HTTP_OK,
-            'message' => 'Déconnexion réussie'
-        ], Response::HTTP_OK);
+            'message' => 'Utilisateur non authentifié.',
+            'status' => 401
+        ], 401);
     }
+
+    // ✅ Supprime uniquement le token actuel de l'utilisateur
+    $request->user()->currentAccessToken()->delete();
+
+    return response()->json([
+        'status' => 200,
+        'message' => 'Déconnexion réussie'
+    ], 200);
+}
+
+
+
+
+
+
+
+    // public function destroy(): JsonResponse
+    // {
+    //     $user = Auth::user();
+
+    //     if ($user) {
+    //         $user->tokens()->delete(); // Supprime tous les tokens de l'utilisateur
+    //     }
+
+    //     return response()->json([
+    //         'status' => Response::HTTP_OK,
+    //         'message' => 'Déconnexion réussie'
+    //     ], Response::HTTP_OK);
+    // }
 
 
 

@@ -53,6 +53,8 @@ Route::middleware(['api.exception'])->group(function () {
         Route::middleware('auth:sanctum')->group(function () {
             Route::post('logout', [LoginController::class, 'destroy'])->name('logout');
             Route::get('/user', fn(Request $request) => $request->user());
+            Route::post('/user/update-profile', [UserController::class, 'updateProfile']);
+            Route::get('/user/profile', [UserController::class, 'getProfile']);
 
             // 🔹 Gestion des utilisateurs
             Route::apiResource('users', UserController::class);

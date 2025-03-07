@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -217,6 +218,70 @@ class UserController extends Controller
         ]);
     }
 
+
+
+
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        // Validation stricte des données
+        $request->validate([
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|regex:/^\+?[0-9]{7,15}$/|max:15|unique:users,phone,' . $user->id,
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048' // Max 2MB
+        ]);
+
+        // Mise à jour des champs autorisés
+        $user->firstname = $request->input('firstname');
+        $user->lastname = $request->input('lastname');
+        $user->company_name = $request->input('company_name');
+        $user->phone = $request->input('phone');
+
+        // Gestion de l'avatar (Upload sécurisé)
+        if ($request->hasFile('avatar')) {
+            $avatar = $request->file('avatar');
+
+            // Supprimer l'ancien avatar si existant
+            if ($user->avatar) {
+                Storage::delete('public/avatars/' . $user->avatar);
+            }
+
+            // Générer un nom de fichier unique
+            $avatarName = time() . '_' . $avatar->getClientOriginalName();
+            $avatar->storeAs('public/avatars', $avatarName);
+
+            $user->avatar = $avatarName;
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profil mis à jour avec succès.',
+            'user' => [
+                'firstname' => $user->firstname,
+                'lastname' => $user->lastname,
+                'company_name' => $user->company_name,
+                'phone' => $user->phone,
+                'avatar' => $user->avatar ? asset('storage/avatars/' . $user->avatar) : null
+            ]
+        ]);
+    }
+
+    public function getProfile()
+    {
+        $user = Auth::user();
+
+        return response()->json([
+            'firstname' => $user->firstname,
+            'lastname' => $user->lastname,
+            'company_name' => $user->company_name,
+            'phone' => $user->phone,
+            'avatar' => $user->avatar ? asset('storage/avatars/' . $user->avatar) : null
+        ]);
+    }
 
 
 }
